@@ -1,0 +1,9 @@
+version: '3'
+services:
+  pyaicam-view:
+    build: .
+    command: node .next/standalone/server.js
+    volumes:
+      - ./pyaicam-view:/pyaicam-view
+    ports:
+      - "3000:3000"
