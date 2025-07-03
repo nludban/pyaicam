@@ -54,3 +54,7 @@ __pycache__/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+
+## makefile syncs
+/sync-*/
