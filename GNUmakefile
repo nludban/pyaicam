@@ -19,14 +19,14 @@ BACKEND_SRCS = \
 	backend/requirements.txt				\
 	backend/Dockerfile					\
 	backend/docker-compose.yml				\
-	backend/pyaicam-api/presentation/__init__.py		\
-	backend/pyaicam-api/presentation/sensorcaps.py		\
-	backend/pyaicam-api/application/__init__.py		\
-	backend/pyaicam-api/control/__init__.py			\
-	backend/pyaicam-api/control/cameracontroller.py		\
-	backend/pyaicam-api/data/__init__.py			\
-	backend/pyaicam-api/data/cameradriver.py		\
-	backend/pyaicam-api/main.py
+	backend/pyaicam/presentation/__init__.py		\
+	backend/pyaicam/presentation/sensorcaps.py		\
+	backend/pyaicam/application/__init__.py			\
+	backend/pyaicam/control/__init__.py			\
+	backend/pyaicam/control/cameracontroller.py		\
+	backend/pyaicam/data/__init__.py			\
+	backend/pyaicam/data/cameradriver.py			\
+	backend/pyaicam/main.py
 
 # Unique subdirs extracted from SRCS
 BACKEND_DIRS = $(sort $(foreach path,				\

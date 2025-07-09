@@ -2,7 +2,9 @@ FROM python:3.11
 
 WORKDIR /pyaicam-api
 
-COPY /pyaicam-api .
+COPY /pyaicam ./pyaicam
+COPY /bin ./bin
+COPY /libexec ./libexec
 COPY /requirements.txt .
 
 RUN pip install -r requirements.txt

@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 
-@app.get("/pyaicam-api/")
+@app.get("/pyaicam/api/")
 async def get_root_api():
     """[summary]
     Test EP Summary
