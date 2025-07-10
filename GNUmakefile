@@ -1,4 +1,4 @@
-all: sync-all
+all: all-protos sync-all
 
 # hostname of the target raspberry pi (all overloaded meanings)
 RPI	?= undefined
@@ -61,5 +61,28 @@ test-backend-dirs:
 
 test-sync-srcs:
 	echo $(SYNC_SRCS)
+
+
+
+all-protos: \
+	backend/pyaicam/presentation/helloworld_pb2.pyi \
+	backend/pyaicam/presentation/camera2_pb2.pyi
+
+PROTOC  = python -m grpc_tools.protoc
+PROTOC_FLAGS = -Ibackend/protos \
+		--python_out=backend/pyaicam/presentation \
+		--pyi_out=backend/pyaicam/presentation \
+		--grpc_python_out=backend/pyaicam/presentation
+
+# https://github.com/grpc/grpc/issues/29459
+#import helloworld_pb2 as helloworld__pb2
+#from . import helloworld_pb2 as helloworld__pb2
+
+backend/pyaicam/presentation/helloworld_pb2.pyi:
+	${PROTOC} ${PROTOC_FLAGS} backend/protos/helloworld.proto
+
+backend/pyaicam/presentation/camera2_pb2.pyi:
+	${PROTOC} ${PROTOC_FLAGS} backend/protos/camera2.proto
+
 
 #--#

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package camera2;
+
+service CameraDriver {
+  rpc ControlStream (stream StatusRequest) returns (stream CommandResponse) {}
+}
+
+message StatusRequest {
+  string status = 1;
+}
+
+message CommandResponse {
+  string command = 1;
+}
