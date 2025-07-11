@@ -51,9 +51,16 @@ sync-dirs: $(SYNC_DIRS)
 
 sync-srcs: $(SYNC_SRCS)
 
-sync-all: sync-dirs sync-srcs
+sync-all: defined-rpi sync-dirs sync-srcs
 
-.PHONY: sync-dirs sync-srcs sync-all
+.PHONY: defined-pri sync-dirs sync-srcs sync-all
+
+defined-rpi:
+	if [ "${RPI}" = "undefined" ]; then	\
+		echo "RPI must be defined";	\
+		exit 1;				\
+	fi
+
 
 # Debugs
 test-backend-dirs:
@@ -78,10 +85,12 @@ PROTOC_FLAGS = -Ibackend/protos \
 #import helloworld_pb2 as helloworld__pb2
 #from . import helloworld_pb2 as helloworld__pb2
 
-backend/pyaicam/presentation/helloworld_pb2.pyi:
+backend/pyaicam/presentation/helloworld_pb2.pyi:	\
+		backend/protos/helloworld.proto
 	${PROTOC} ${PROTOC_FLAGS} backend/protos/helloworld.proto
 
-backend/pyaicam/presentation/camera2_pb2.pyi:
+backend/pyaicam/presentation/camera2_pb2.pyi:		\
+		backend/protos/camera2.proto
 	${PROTOC} ${PROTOC_FLAGS} backend/protos/camera2.proto
 
 

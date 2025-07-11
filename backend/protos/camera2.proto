@@ -2,14 +2,118 @@ syntax = "proto3";
 
 package camera2;
 
-service CameraDriver {
-  rpc ControlStream (stream StatusRequest) returns (stream CommandResponse) {}
+// Note the physical camera is owned by the client, it connects to a
+// server to feed it captured frames.  Only the control messages belong
+// here, image buffers are sent through separately subscribed channels.
+service CameraServer {
+  rpc ControlStream (stream StatusUpdate) returns (stream NextCommand) {}
 }
 
-message StatusRequest {
-  string status = 1;
+
+// The client sends its current status to the server and waits for the
+// next command.
+message StatusUpdate {
+
+  // Pi's time of day associated with last captured frame (best effort)
+  uint64 walltime_us = 1;
+
+  // Camera subsystem's timestamp from last captured frame, or 0.
+  uint64 timestamp_us = 2;
+
+  // Meta-data for last frame published to a channel
+  message FrameInfo {
+    uint32 channel_id = 1;
+    uint32 sequence = 2;
+    uint64 walltime_us = 3;
+    uint64 timestamp_us = 4;
+    uint32 n_bytes = 5;
+  }
+
+  // When running, describes new frames captured by the last command.
+  // (May be useful to keep out here for fault diagnostics?)
+  repeated FrameInfo frames = 3;
+
+  oneof state {
+    StandbyState standby = 5;
+    ReadyState ready = 6;
+    RunningState running = 7;
+    FaultState fault = 8;
+  }
+
 }
 
-message CommandResponse {
-  string command = 1;
+
+// The first message from the client upon connection, or after
+// a reset command.
+message StandbyState {
+  // List of sensor modes.
+}
+
+// The camera has been configured and is ready to capture.
+// Internal buffers are likely to be discarded.
+message ReadyState {
+}
+
+// One or more channels is subscribed to one or more streams.
+message RunningState {
+}
+
+// Something went very wrong, reset or close to recover.
+message FaultState {
+  string message = 1;
+}
+
+
+message NextCommand {
+  oneof command {
+    Configure configure = 5;
+    Subscribe subscribe = 6;
+    Unsubscribe unsubscribe = 7;
+    Reset reset = 8;
+    Close close = 9;
+  }
+}
+
+message Configure {
+  // sensor
+  // streams (raw, main, lores, preview?)
+}
+
+message Subscribe {
+
+  // Channel name and id (both assigned by the server).
+  string channel_name = 1;
+  uint32 channel_id = 2;
+
+  // Stream name (~url?) including format, crop, etc
+  string source = 3;
+
+  // tcp://<server>:<port>
+  string target = 4;
+}
+
+message Unsubscribe {
+  uint32 channel_id = 1;
+}
+
+// 
+message Capture {
+  message ChannelSequence {
+    uint32 channel_id = 1;
+
+    // 0 for latest available.
+    uint32 sequence = 2;
+  }
+
+  repeated ChannelSequence channel_sequence = 1;
+}
+
+// Reset: unsubscribe all, stop capturing, return to standby state.
+message Reset {
+  string message = 1;
+}
+
+// Terminate the session; the driver process will exit and
+// likely be restarted and reconnect
+message Close {
 }
