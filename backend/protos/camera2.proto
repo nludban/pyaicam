@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package camera2;
 
+// https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
+// https://datasheets.raspberrypi.com/camera/raspberry-pi-camera-guide.pdf
+
 // Note the physical camera is owned by the client, it connects to a
 // server to feed it captured frames.  Only the control messages belong
 // here, image buffers are sent through separately subscribed channels.
@@ -43,10 +46,36 @@ message StatusUpdate {
 }
 
 
+message ArraySize {
+  uint32 width = 1;
+  uint32 height = 2;
+}
+
+
+message SensorWindow {
+  uint32 x_offset = 1;
+  uint32 y_offset = 2;
+  uint32 width = 3;
+  uint32 height = 4;
+}
+
+
+
 // The first message from the client upon connection, or after
 // a reset command.
 message StandbyState {
+  // -- camera properties
+  // model
+  // colour filter arrangement
+  // location
+  // ArraySize pixel array size
+  // SensorWindow pxiel array active areas
+  // rotation
+  // scaler crop maximum
+  // unit cell size (x, y: nanometers)
+
   // List of sensor modes.
+  repeated SensorConfig sensor_configs = 15;
 }
 
 // The camera has been configured and is ready to capture.
@@ -72,6 +101,69 @@ message NextCommand {
     Reset reset = 8;
     Close close = 9;
   }
+}
+
+message SensorConfig {
+  // transform = none, hflip, vflip, 180
+  // colour space
+  // buffer count
+  // ArraySize output size
+  // bit_depth
+}
+
+message ExposureLimits {
+  // frame duration min
+  // frame duration max
+  // hdr channel (read only)
+  // sensor timestamp (read only, with image)
+  // sensor blacklevels (read only, with image)
+}
+
+message ExposureControls {
+  // exposure time
+  // exposure value
+  // frame duration
+
+  // scaler crop - x offset, y offset, width, height
+  SensorWindow scaler_crop = 5;
+
+  // analogue gain
+  // digital gain
+  // brightness
+  // contrast
+  // saturation
+  // sharpness
+
+  // aec/agc exposure mode
+  // aec/agc enable
+  // aec/agc constraint mode
+  // aec/agc flicker mode
+  // aec/agc flicker period
+  // aec/agc metering mode
+
+  // af metering mode
+  // af mode
+  // af pause
+  // af range
+  // af speed
+  // af trigger
+  // af windows
+
+  // awb mode
+  // awb enable
+
+  // colour correction matrix
+  // colour gains
+  // colour temperature
+  // hdr mode
+  // lens position
+  // lux
+  // noise reduction mode
+}
+
+message StreamConfig {
+  // format
+  // ArraySize size
 }
 
 message Configure {

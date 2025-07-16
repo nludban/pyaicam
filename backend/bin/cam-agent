@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export PYTHONPATH=`pwd`
+
+ls -l ${PYTHONPATH}
+
+python libexec/cam-agent.py "$@"

@@ -4,9 +4,11 @@ click==8.2.1
 environs==14.2.0
 fastapi==0.115.14
 fastapi_cors==0.0.6
+grpcio==1.73.1
 h11==0.16.0
 idna==3.10
 marshmallow==4.0.0
+protobuf==6.31.1
 pydantic==2.11.7
 pydantic_core==2.33.2
 python-dotenv==1.1.1

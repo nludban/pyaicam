@@ -4,7 +4,7 @@ all: all-protos sync-all
 RPI	?= undefined
 
 define MKDIR_RULE
-sync-$(RPI)/$(1): $(1)
+sync-$(RPI)/$(1):
 	ssh pi@$(RPI) mkdir -p Project/pyaicam/$(1)
 	mkdir -p sync-$(RPI)/$(1)
 endef
@@ -19,14 +19,20 @@ BACKEND_SRCS = \
 	backend/requirements.txt				\
 	backend/Dockerfile					\
 	backend/docker-compose.yml				\
+	backend/pyaicam/__init__.py				\
 	backend/pyaicam/presentation/__init__.py		\
 	backend/pyaicam/presentation/sensorcaps.py		\
+	backend/pyaicam/presentation/camera2_pb2.py		\
+	backend/pyaicam/presentation/camera2_pb2_grpc.py	\
 	backend/pyaicam/application/__init__.py			\
 	backend/pyaicam/control/__init__.py			\
 	backend/pyaicam/control/cameracontroller.py		\
 	backend/pyaicam/data/__init__.py			\
 	backend/pyaicam/data/cameradriver.py			\
-	backend/pyaicam/main.py
+	backend/pyaicam/main.py					\
+	backend/bin/cam-agent					\
+	backend/bin/serve-api					\
+	backend/libexec/cam-agent.py
 
 # Unique subdirs extracted from SRCS
 BACKEND_DIRS = $(sort $(foreach path,				\
@@ -47,8 +53,10 @@ $(foreach src,							\
 SYNC_DIRS	= $(foreach dir,$(BACKEND_DIRS),sync-$(RPI)/$(dir))
 SYNC_SRCS	= $(foreach src,$(BACKEND_SRCS),sync-$(RPI)/$(src))
 
+# Would prefer order-only-prerequisites
 sync-dirs: $(SYNC_DIRS)
 
+# Add lint checks?
 sync-srcs: $(SYNC_SRCS)
 
 sync-all: defined-rpi sync-dirs sync-srcs
@@ -64,10 +72,10 @@ defined-rpi:
 
 # Debugs
 test-backend-dirs:
-	echo $(BACKEND_DIRS)
+	@echo $(BACKEND_DIRS)
 
 test-sync-srcs:
-	echo $(SYNC_SRCS)
+	@echo $(SYNC_SRCS)
 
 
 

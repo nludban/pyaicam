@@ -43,4 +43,20 @@ camera control, and observation.
 
 http://192.168.1.172:3000/ (todo: should be pyaicam-view here)
 
+
+### Interactive Test
+
+sudo apt-get install -y python3-pip
+pip freeze | grep camera
+picamera2==0.3.28
+
+...but 0.3.27 is actually the latest
+...so use the system site packages for camera2
+
+
+python3.11 -m venv --system-site-packages ~/.env-pyaicam
+source ~/.env-pyaicam/bin/activate
+pip install -r requirements.txt
+
+
 ##
