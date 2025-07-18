@@ -5,7 +5,9 @@
 
 import pyaicam.presentation.camera2_pb2
 
-import logging
+from pyaicam.application.logging import *
+
+import re
 import sys
 import time
 
@@ -14,49 +16,7 @@ import threading
 import libcamera
 import picamera2
 
-#---------------------------------------------------------------------#
-
-def makeRecord(self, name, level, fn, lno, msg, args, exc_info,
-               func=None, extra=None, sinfo=None):
-    # logging.Logger
-    rv = logging_makeRecord(self,
-                            name, level, fn, lno, msg, args, exc_info,
-                            func=func, extra=None, sinfo=sinfo)
-    rv.extra = extra
-    #print('Added extra', id(rv), extra)
-    return rv
-
-# `import logging` sets up root and manager as side effects.
-# Workaround is to monkey patch the method on the class.
-logging_makeRecord = logging.Logger.makeRecord
-logging.Logger.makeRecord = makeRecord
-
-class ExtraFormatter(logging.Formatter):
-    converter = time.gmtime
-
-    def formatMessage(self, record):
-        base = super().formatMessage(record)
-        if not record.extra:
-            return base
-        extra = [ '%s=%r' % key_value
-                  for key_value in record.extra.items() ]
-        return base + ' ' + ' '.join(extra)
-    
-# basicConfig accepts formatter=... starting in 3.15
-logging.Formatter = ExtraFormatter
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s.%(msecs)03d %(levelname)s %(message)s',
-    # XXX microseconds?
-    #datefmt='%Y-%m-%d %H:%M_%S')
-    #formatter=log_formatter)	# XXX py3.15
-)
-
-logger = logging.getLogger('cam-agent')
-
-def log_extra(**kwargs):
-    return {'extra': kwargs}
+logger = getLogger('cam-agent')
 
 #---------------------------------------------------------------------#
 
@@ -72,6 +32,18 @@ for info in infos:
                             id=info['Id']))
 
 arg0, camera_id, target_url = sys.argv
+if re.match(r'[0-9]+', camera_id):
+    camera_id = infos[int(camera_id)]['Id']
+camera_info = [ info for info in infos
+                if info['Id'] == camera_id ][0]
+
+# target_url:
+# dns:<host>:<port>
+# ipv4:<addr>:<port>
+
+## Test connection to server, announce agent startup?
+
+logger.info('Opening camera', **log_extra(id=camera_info['Id']))
 
 
 #--#

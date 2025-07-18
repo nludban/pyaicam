@@ -25,14 +25,17 @@ BACKEND_SRCS = \
 	backend/pyaicam/presentation/camera2_pb2.py		\
 	backend/pyaicam/presentation/camera2_pb2_grpc.py	\
 	backend/pyaicam/application/__init__.py			\
+	backend/pyaicam/application/logging.py			\
 	backend/pyaicam/control/__init__.py			\
 	backend/pyaicam/control/cameracontroller.py		\
 	backend/pyaicam/data/__init__.py			\
 	backend/pyaicam/data/cameradriver.py			\
 	backend/pyaicam/main.py					\
 	backend/bin/cam-agent					\
+	backend/bin/cam-capture					\
 	backend/bin/serve-api					\
-	backend/libexec/cam-agent.py
+	backend/libexec/cam-agent.py				\
+	backend/libexec/cam-capture.py
 
 # Unique subdirs extracted from SRCS
 BACKEND_DIRS = $(sort $(foreach path,				\
@@ -96,10 +99,13 @@ PROTOC_FLAGS = -Ibackend/protos \
 backend/pyaicam/presentation/helloworld_pb2.pyi:	\
 		backend/protos/helloworld.proto
 	${PROTOC} ${PROTOC_FLAGS} backend/protos/helloworld.proto
+	./backend/tools/grpc-import-fix.py \
+		backend/pyaicam/presentation/helloworld_pb2_grpc.py
 
 backend/pyaicam/presentation/camera2_pb2.pyi:		\
 		backend/protos/camera2.proto
 	${PROTOC} ${PROTOC_FLAGS} backend/protos/camera2.proto
-
+	./backend/tools/grpc-import-fix.py \
+		backend/pyaicam/presentation/camera2_pb2_grpc.py
 
 #--#

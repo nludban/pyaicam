@@ -4,4 +4,4 @@ BINDIR=`dirname ${0}`
 
 export PYTHONPATH=`dirname ${BINDIR}`
 
-python ${PYTHONPATH}/libexec/cam-agent.py "$@"
+python ${PYTHONPATH}/libexec/cam-capture.py "$@"

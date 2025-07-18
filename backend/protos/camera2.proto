@@ -8,7 +8,7 @@ package camera2;
 // Note the physical camera is owned by the client, it connects to a
 // server to feed it captured frames.  Only the control messages belong
 // here, image buffers are sent through separately subscribed channels.
-service CameraServer {
+service CameraController {
   rpc ControlStream (stream StatusUpdate) returns (stream NextCommand) {}
 }
 
