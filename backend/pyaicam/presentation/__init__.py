@@ -3,12 +3,13 @@
 ##
 
 from .camera2_pb2_grpc import (
+    CameraControllerStub,
     CameraControllerServicer,
     add_CameraControllerServicer_to_server,
 )
 
-from .camera2_pb2 import (
-    StatusUpdate,
-)
+from .cameraproxy import CameraProxy
+
+
 
 #--#

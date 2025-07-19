@@ -21,11 +21,13 @@ BACKEND_SRCS = \
 	backend/docker-compose.yml				\
 	backend/pyaicam/__init__.py				\
 	backend/pyaicam/presentation/__init__.py		\
+	backend/pyaicam/presentation/cameraproxy.py		\
 	backend/pyaicam/presentation/sensorcaps.py		\
 	backend/pyaicam/presentation/camera2_pb2.py		\
 	backend/pyaicam/presentation/camera2_pb2_grpc.py	\
 	backend/pyaicam/application/__init__.py			\
 	backend/pyaicam/application/logging.py			\
+	backend/pyaicam/application/network.py			\
 	backend/pyaicam/control/__init__.py			\
 	backend/pyaicam/control/cameracontroller.py		\
 	backend/pyaicam/data/__init__.py			\

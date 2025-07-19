@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 package camera2;
 
 // https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
@@ -9,8 +11,19 @@ package camera2;
 // server to feed it captured frames.  Only the control messages belong
 // here, image buffers are sent through separately subscribed channels.
 service CameraController {
-  rpc ControlStream (stream StatusUpdate) returns (stream NextCommand) {}
+  rpc AgentStarting (AgentInfo) returns (google.protobuf.Empty) { }
+  rpc AgentStopping (AgentInfo) returns (google.protobuf.Empty) { }
+  rpc ControlStream (stream StatusUpdate) returns (stream NextCommand) { }
 }
+
+
+message AgentInfo {
+  string host = 1;
+  int32 pid = 2;
+  string camera_id = 3;
+  string reason = 4;
+}
+
 
 
 // The client sends its current status to the server and waits for the

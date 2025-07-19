@@ -2,6 +2,22 @@
 
 BINDIR=`dirname ${0}`
 
+export NO_COLOR=defined
+# https://github.com/raspberrypi/libcamera/blob/044ceaa4f6cc9d9143c2c1a2e0bf4f7b81c939e5/src/libcamera/pipeline/rpi/vc4/vc4.cpp#L440
+# c++ (macro?) LOG(...)
+# include <libcamera/base/log.h>
+# https://github.com/raspberrypi/libcamera/blob/044ceaa4f6cc9d9143c2c1a2e0bf4f7b81c939e5/src/libcamera/base/log.cpp#L213
+# severityColors[] if LogOutput::color_ // Updated 3 years ago...
+# LogOutput(const char *path, bool color);
+# int Logger::logSetFile(const char *path, bool color)
+# int Logger::logSetStream(std::ostream *stream, bool color)
+# ./include/libcamera/logging.h:int logSetStream(std::ostream *stream, bool color = false);
+# --> ???
+# https://github.com/raspberrypi/libcamera/commit/575703894624306950c0540182afc48ba3732f8c
+export LIBCAMERA_LOG_NO_COLOR=defined
+
 export PYTHONPATH=`dirname ${BINDIR}`
 
 python ${PYTHONPATH}/libexec/cam-agent.py "$@"
+
+#--#

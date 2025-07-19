@@ -4,6 +4,7 @@
 ##
 
 import pyaicam.presentation #camera2_pb2
+import pyaicam.application.network
 
 import grpc
 
@@ -14,6 +15,8 @@ import time
 import concurrent #futures
 import threading
 
+from google.protobuf.empty_pb2 import Empty
+
 from pyaicam.application.logging import *
 logger = getLogger('cam-capture')
 
@@ -22,11 +25,20 @@ class CameraControllerServicer(
     pyaicam.presentation.CameraControllerServicer
 ):
 
+    def AgentStarting(self, request, context):
+        print('Starting:', request)
+        return Empty()
+
     def ControlStream(self, request, context):
         pass
 
+    def AgentStopping(self, request, context):
+        print('Stopping:', request)
+        return Empty()
+
 
 def start_server() -> grpc.Server:
+    host = pyaicam.application.network.local_ipaddr()
     port = "50051"
     server = grpc.server(
         concurrent.futures.ThreadPoolExecutor(max_workers=1)
@@ -34,9 +46,11 @@ def start_server() -> grpc.Server:
     pyaicam.presentation.add_CameraControllerServicer_to_server(
         CameraControllerServicer(), server
     )
-    server.add_insecure_port("[::]:" + port)
+    # tcp46   0   0  *.50051   *.*     LISTEN
+    #server.add_insecure_port("[::]:" + port)
+    server.add_insecure_port(f'{host}:{port}')
     server.start()
-    print(f'*** Server ready: dns:127.0.0.1:{port}')
+    print(f'*** Server ready: dns:{host}:{port}')
     return server
 
 
