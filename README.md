@@ -1,6 +1,7 @@
 # pyaicam
 
-Raspberry Pi as IP Camera platform for AI things
+Raspberry Pi as IP Camera platform for AI things, focus on high
+quality jpeg/mjpeg streams at moderate frame rates.
 
 "pie-eye-cam"
 
@@ -21,6 +22,11 @@ Multiple cameras or streams are possible depending on the Pi model...
 API provided for programmatic access and control, specifically to make
 it easy to experiment with DSP and AI.
 Expect a client library to keep it simple.
+
+
+## More Docs
+
+[cam-agent](docs/cam-agent.md)
 
 
 ## Build
