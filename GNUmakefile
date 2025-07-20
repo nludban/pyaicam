@@ -110,4 +110,11 @@ backend/pyaicam/presentation/camera2_pb2.pyi:		\
 	./backend/tools/grpc-import-fix.py \
 		backend/pyaicam/presentation/camera2_pb2_grpc.py
 
+.PHONY: docs
+docs: docs/agent-cc.png
+
+docs/agent-cc.png: docs/agent-cc.obj
+	tgif -print -png -odocs docs/agent-cc.obj
+
+
 #--#

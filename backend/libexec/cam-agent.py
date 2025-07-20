@@ -4,6 +4,7 @@
 ##
 
 import pyaicam.presentation
+import pyaicam.presentation.cameraproxy as rpc
 
 from pyaicam.application.logging import *
 import pyaicam.application.network
@@ -38,6 +39,67 @@ if re.match(r'[0-9]+', camera_id):
     camera_id = infos[int(camera_id)]['Id']
 camera_info = [ info for info in infos
                 if info['Id'] == camera_id ][0]
+
+
+class CaptureController:
+
+    def __init__(self):
+        pass
+
+
+class CameraManager:
+
+
+
+class CameraAgent(rpc.CameraAgent):
+
+    def __init__(
+        self, host: str, camera_id: str, capturec: CaptureController
+    ):
+        self._host = host
+        self._camera_id = camera_id
+        self._capturec = capturec
+        return
+
+    def get_host(self) -> str:
+        return self._host
+
+    def get_camera_id(self) -> str:
+        return self._camera_id
+
+    def on_initialize(
+        self, proxy: rpc.CameraProxy
+    ) -> rpc.NextCommand:
+        print('init!')
+
+    def on_configure(
+        self, proxy: rpc.CameraProxy, req: rpc.Configure
+    ) -> rpc.NextCommand:
+        raise NotImplementedError(f'{self.__class__}.on_configure')
+
+    def on_subscribe(
+        self, proxy: rpc.CameraProxy, req: rpc.Subscribe
+    ) -> rpc.NextCommand:
+        raise NotImplementedError(f'{self.__class__}.on_subscribe')
+
+    def on_unsubscribe(
+        self, proxy: rpc.CameraProxy, req: rpc.Unsubscribe
+    ) -> rpc.NextCommand:
+        raise NotImplementedError(f'{self.__class__}.on_unsubscribe')
+
+    def on_reset(
+        self, proxy: rpc.CameraProxy, req: rpc.Reset
+    ) -> rpc.NextCommand:
+        raise NotImplementedError(f'{self.__class__}.on_reset')
+
+    def on_close(
+        self, proxy: rpc.CameraProxy, req: rpc.Close
+    ) -> rpc.NextCommand:
+        raise NotImplementedError(f'{self.__class__}.on_close')
+
+    #def on_error(...) -> None
+    
+
 
 # server_url:
 # dns:<host>:<port>
